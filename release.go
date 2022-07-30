@@ -5,17 +5,16 @@ import (
 	"os"
 	"path"
 
-	"github.com/gomodule/redigo/redis"
 	"github.com/jmoiron/sqlx"
 )
 
 type RedisConnectors string
 
-// 返回连接器，如果没有找到则连接器返回nil
-func (ctr RedisConnectors) Connector() *redis.Pool {
-	key := string(ctr)
-	return redislist[key]
-}
+// // 返回连接器，如果没有找到则连接器返回nil
+// func (ctr RedisConnectors) Connector() *redis.Pool {
+// 	key := string(ctr)
+// 	return redislist[key]
+// }
 
 // 返回连接信息，如果没有找到则连接器返回nil
 func (ctr RedisConnectors) Info() *Redis_t {
