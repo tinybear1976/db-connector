@@ -1,4 +1,4 @@
-module github.com/tinybear1976/db-connector
+module github.com/tinybear1976/dbconnector
 
 go 1.16
 
