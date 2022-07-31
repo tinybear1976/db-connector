@@ -29,7 +29,7 @@ func Diconnect(conn *redis.Conn) (err error) {
 // 常用命令GET
 func GET(conn *redis.Conn, key string) (string, error) {
 	if conn == nil {
-		return "", errors.New("connection is nil")
+		return "", errors.New("redis connection is nil")
 	}
 	val, err := redis.String((*conn).Do("GET", key))
 	return val, err
@@ -37,7 +37,7 @@ func GET(conn *redis.Conn, key string) (string, error) {
 
 func SET(conn *redis.Conn, key, value string) (err error) {
 	if conn == nil {
-		return errors.New("connection is nil")
+		return errors.New("redis connection is nil")
 	}
 	_, err = (*conn).Do("SET", key, value)
 	return err
@@ -45,7 +45,7 @@ func SET(conn *redis.Conn, key, value string) (err error) {
 
 func DEL(conn *redis.Conn, keys ...interface{}) (err error) {
 	if conn == nil {
-		return errors.New("connection is nil")
+		return errors.New("redis connection is nil")
 	}
 	_, err = (*conn).Do("DEL", keys...)
 	return err
@@ -53,7 +53,7 @@ func DEL(conn *redis.Conn, keys ...interface{}) (err error) {
 
 func KEYS(conn *redis.Conn, query string) (keys []string, err error) {
 	if conn == nil {
-		return nil, errors.New("connection is nil")
+		return nil, errors.New("redis connection is nil")
 	}
 	keys, err = redis.Strings((*conn).Do("KEYS", query))
 	return keys, err
@@ -61,7 +61,7 @@ func KEYS(conn *redis.Conn, query string) (keys []string, err error) {
 
 func HMSET(conn *redis.Conn, params ...interface{}) (err error) {
 	if conn == nil {
-		return errors.New("connection is nil")
+		return errors.New("redis connection is nil")
 	}
 	_, err = (*conn).Do("HMSET", params...)
 	return err
@@ -69,7 +69,7 @@ func HMSET(conn *redis.Conn, params ...interface{}) (err error) {
 
 func HMGET(conn *redis.Conn, params ...interface{}) (vals []string, err error) {
 	if conn == nil {
-		return nil, errors.New("connection is nil")
+		return nil, errors.New("redis connection is nil")
 	}
 	vals, err = redis.Strings((*conn).Do("HMGET", params...))
 	return vals, err
@@ -77,7 +77,7 @@ func HMGET(conn *redis.Conn, params ...interface{}) (vals []string, err error) {
 
 func HGETALL(conn *redis.Conn, key string) (ret map[string]string, err error) {
 	if conn == nil {
-		return nil, errors.New("connection is nil")
+		return nil, errors.New("redis connection is nil")
 	}
 	ret, err = redis.StringMap((*conn).Do("HGETALL", key))
 	return ret, err
@@ -85,7 +85,7 @@ func HGETALL(conn *redis.Conn, key string) (ret map[string]string, err error) {
 
 func HDEL(conn *redis.Conn, params ...interface{}) (err error) {
 	if conn == nil {
-		return errors.New("connection is nil")
+		return errors.New("redis connection is nil")
 	}
 	_, err = (*conn).Do("HDEL", params...)
 	return err
@@ -93,7 +93,7 @@ func HDEL(conn *redis.Conn, params ...interface{}) (err error) {
 
 func EXISTS(conn *redis.Conn, key string) (ret bool, err error) {
 	if conn == nil {
-		return false, errors.New("connection is nil")
+		return false, errors.New("redis connection is nil")
 	}
 	res, err := redis.Int((*conn).Do("EXISTS", key))
 	if err != nil {
@@ -102,9 +102,10 @@ func EXISTS(conn *redis.Conn, key string) (ret bool, err error) {
 	return res != 0, nil
 }
 
-func BGREWRITEAOF(conn *redis.Conn) {
+func BGREWRITEAOF(conn *redis.Conn) error {
 	if conn == nil {
-		return
+		return errors.New("redis connection is nil")
 	}
-	(*conn).Do("BGREWRITEAOF")
+	_, err := (*conn).Do("BGREWRITEAOF")
+	return err
 }
