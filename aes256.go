@@ -9,7 +9,7 @@ import (
 
 var (
 	req_key     = "tiny"
-	req_iv      = "WangZhaoWangZhao"
+	req_iv      = "WangZhaoWang0815"
 	key_maxsize = 32
 	key         = []byte(req_key)
 	iv_maxsize  = 16
