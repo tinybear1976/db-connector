@@ -21,11 +21,12 @@ func init() {
 // 通过json字符串原型增加一个Redis连接器
 func addRedisByJsonString(jsonstr string) error {
 	p := &Redis_t{
-		Key:    "",
-		Server: "",
-		Port:   0,
-		Pwd:    "",
-		DB:     0,
+		Key:           "",
+		Server:        "",
+		Port:          0,
+		Pwd:           "",
+		DB:            0,
+		PoolMaxActive: 0,
 	}
 	err := json.Unmarshal([]byte(jsonstr), p)
 	if err != nil {
@@ -35,7 +36,7 @@ func addRedisByJsonString(jsonstr string) error {
 	redisPool := &redis.Pool{
 		MaxIdle:     2,
 		IdleTimeout: 240 * time.Second,
-		MaxActive:   1000,
+		MaxActive:   p.PoolMaxActive,
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", addr, redis.DialDatabase(p.DB))
 			if err != nil {

@@ -8,11 +8,12 @@ import (
 )
 
 type Redis_t struct {
-	Key    string `toml:"key" json:"key"`
-	Server string `toml:"server"`
-	Port   int    `toml:"port"`
-	Pwd    string `toml:"pwd"`
-	DB     int    `toml:"db"`
+	Key           string `toml:"key" json:"key"`
+	Server        string `toml:"server"`
+	Port          int    `toml:"port"`
+	Pwd           string `toml:"pwd"`
+	DB            int    `toml:"db"`
+	PoolMaxActive int    `toml:poolMaxActive` // 0无限制
 }
 
 // 将连接信息按照规范写入流（加密后内容）
