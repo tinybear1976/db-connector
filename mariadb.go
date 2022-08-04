@@ -75,16 +75,19 @@ func addMariadbByStruct(s *Mariadb_t) error {
 
 // 分析超时参数，如果有错误，能按照默认值处理就按照默认值处理，如果不能直接返回空字符串
 func parseTimeout(val string) string {
-	matched, err := regexp.MatchString("^([0-9]{1,}|[0-9]{1,}[.][0-9]*)(ms|s|h|m)$", val)
-	if err != nil || !matched {
+	// matched, err := regexp.MatchString("^([0-9]{1,}|[0-9]{1,}[.][0-9]*)(ms|s|h|m)$", val)
+	// if err != nil || !matched {
+	// 	// 忽略错误，返回空字符串
+	// 	return ""
+	// }
+	// return val
+	re, err := regexp.Compile("^([0-9]{1,}|[0-9]{1,}[.][0-9]*)(ms|s|h|m)$")
+	if err != nil {
 		// 忽略错误，返回空字符串
 		return ""
 	}
-	// if matched {
-	return val
-	// } else {
-	// return ""
-	// }
+	s := re.FindString(val)
+	return s
 }
 
 // 清除所有的连接器
