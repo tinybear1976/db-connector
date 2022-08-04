@@ -9,13 +9,15 @@ import (
 func Test_Mariadbt_SaveFile(t *testing.T) {
 
 	m := Mariadb_t{
-		Key:     "test",
-		Server:  "127.0.0.1",
-		Port:    3306,
-		Uid:     "root",
-		Pwd:     "1234#@&!Keen",
-		DB:      "city",
-		Timeout: 10,
+		Key:          "test",
+		Server:       "127.0.0.1",
+		Port:         3306,
+		Uid:          "root",
+		Pwd:          "1234#@&!Keen",
+		DB:           "city",
+		Timeout:      "2s",
+		ReadTimeout:  "2s",
+		WriteTimeout: "",
 	}
 
 	err := m.SaveConnectorFile("t1")

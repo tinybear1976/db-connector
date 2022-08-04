@@ -44,13 +44,15 @@ func (t Redis_t) SaveConnectorFile(onlyMainFilename string) error {
 }
 
 type Mariadb_t struct {
-	Key     string `toml:"key" json:"key"`
-	Server  string `toml:"server" json:"server"`
-	Port    int    `toml:"port" json:"port"`
-	Uid     string `toml:"uid" json:"uid"`
-	Pwd     string `toml:"pwd" json:"pwd"`
-	DB      string `toml:"db" json:"db"`
-	Timeout int    `toml:"timeout" json:"timeout"`
+	Key          string `toml:"key" json:"key"`
+	Server       string `toml:"server" json:"server"`
+	Port         int    `toml:"port" json:"port"`
+	Uid          string `toml:"uid" json:"uid"`
+	Pwd          string `toml:"pwd" json:"pwd"`
+	DB           string `toml:"db" json:"db"`
+	Timeout      string `toml:"timeout" json:"timeout"`           // 字符串，携带单位如果忘记写默认s
+	ReadTimeout  string `toml:"readTimeout" json:"readTimeout"`   // 字符串，携带单位如果忘记写默认s
+	WriteTimeout string `toml:"writeTimeout" json:"writeTimeout"` // 字符串，携带单位如果忘记写默认s
 }
 
 // 将连接信息按照规范写入流（加密后内容）
