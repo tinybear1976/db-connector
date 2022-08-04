@@ -29,7 +29,9 @@ m := Mariadb_t{
 		Uid:     "root",
 		Pwd:     "1234#@&!Keen",
 		DB:      "city",
-		Timeout: 10,
+		Timeout:      "",
+		ReadTimeout:  "",
+		WriteTimeout: "",
 	}
 // only main file name
 err := m.SaveConnectorFile("t1")
