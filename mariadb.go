@@ -24,7 +24,7 @@ func addMariadbByJsonString(jsonstr string) error {
 	p := &Mariadb_t{
 		Key:          "",
 		Server:       "",
-		Port:         0,
+		Port:         3306,
 		Uid:          "",
 		Pwd:          "",
 		DB:           "",

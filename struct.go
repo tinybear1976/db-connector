@@ -83,3 +83,41 @@ func (t Mariadb_t) SaveConnectorFile(onlyMainFilename string) error {
 	err = t.CreateConnector(f)
 	return err
 }
+
+type Postgres_t struct {
+	Key      string `toml:"key" json:"key"`
+	Server   string `toml:"server" json:"server"`
+	Port     int    `toml:"port" json:"port"`
+	Username string `toml:"user" json:"user"`
+	Pwd      string `toml:"pwd" json:"pwd"`
+	DB       string `toml:"db" json:"db"`
+	Timeout  int    `toml:"timeout" json:"timeout"`
+}
+
+// 将连接信息按照规范写入流（加密后内容）
+func (t Postgres_t) CreateConnector(output io.Writer) error {
+	buf, err := json.Marshal(t)
+	if err != nil {
+		return fmt.Errorf("createConnector生成json阶段错误: %s", err)
+	}
+	data := []byte(kind_postgres + string(buf))
+	fmt.Println(string(data))
+	clptext, err := encrypt(data)
+	if err != nil {
+		return fmt.Errorf("createConnector文本加密阶段错误: %s", err)
+	}
+	_, err = output.Write([]byte(clptext))
+	return err
+}
+
+// 提供文件名(不含后缀，模块自动添加)，保存生成连接器文件
+func (t Postgres_t) SaveConnectorFile(onlyMainFilename string) error {
+	filename := onlyMainFilename + connector_file_ext
+	f, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		return fmt.Errorf("生成连接器文件错误. %s", err)
+	}
+	defer f.Close()
+	err = t.CreateConnector(f)
+	return err
+}

@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type RedisConnectors string
+type RedisConnector string
 
 // // 返回连接器，如果没有找到则连接器返回nil
 // func (ctr RedisConnectors) Connector() *redis.Pool {
@@ -17,23 +17,37 @@ type RedisConnectors string
 // }
 
 // 返回连接信息，如果没有找到则连接器返回nil
-func (ctr RedisConnectors) Info() *Redis_t {
+func (ctr RedisConnector) Info() *Redis_t {
 	key := string(ctr)
 	return redis_struct[key]
 }
 
-type MariadbConnectors string
+type MariadbConnector string
 
 // 返回连接器，如果没有找到则连接器返回nil
-func (ctr MariadbConnectors) Connector() *sqlx.DB {
+func (ctr MariadbConnector) Connector() *sqlx.DB {
 	key := string(ctr)
 	return mariadbs[key]
 }
 
 // 返回连接信息，如果没有找到则连接器返回nil
-func (ctr MariadbConnectors) Info() *Mariadb_t {
+func (ctr MariadbConnector) Info() *Mariadb_t {
 	key := string(ctr)
 	return mariadbs_struct[key]
+}
+
+type PostgresConnector string
+
+// 返回连接器，如果没有找到则连接器返回nil
+func (ctr PostgresConnector) Connector() *sqlx.DB {
+	key := string(ctr)
+	return postgres[key]
+}
+
+// 返回连接信息，如果没有找到则连接器返回nil
+func (ctr PostgresConnector) Info() *Postgres_t {
+	key := string(ctr)
+	return postgres_struct[key]
 }
 
 // 根据指定路径搜索所有连接器文件，并进行解析，自动添加
@@ -62,6 +76,11 @@ func AddFromFiles(currentPath string) error {
 			if err != nil {
 				err = fmt.Errorf("尝试增加mariadb连接器失败. %s", err)
 			}
+		case kind_postgres:
+			err = addPostgresByJsonString(jsonstr)
+			if err != nil {
+				err = fmt.Errorf("尝试增加postgresql连接器失败. %s", err)
+			}
 		case kind_redis:
 			err = addRedisByJsonString(jsonstr)
 			if err != nil {
@@ -78,14 +97,19 @@ func AddFromFiles(currentPath string) error {
 }
 
 // 从连接配置结构体切片中进行添加，一般改函数用于第二步，从配置文件中读取后，进行添加，如果与之前的文件连接器key冲突，这里将覆盖之前的内容
-func AddFromStructs(ms []Mariadb_t, rs []Redis_t) (err error) {
+func AddFromStructs(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
 	for i := 0; i < len(ms); i++ {
 		err = addMariadbByStruct(&(ms[i]))
 		if err != nil {
 			return
 		}
 	}
-
+	for i := 0; i < len(ps); i++ {
+		err = addPostgresByStruct(&(ps[i]))
+		if err != nil {
+			return
+		}
+	}
 	for i := 0; i < len(rs); i++ {
 		addRedisByStruct(&(rs[i]))
 	}

@@ -28,6 +28,28 @@ func Test_Mariadbt_SaveFile(t *testing.T) {
 		t.Fatal("SaveConnectorFile() = file not exist, want exist")
 	}
 }
+
+func Test_Postgrest_SaveFile(t *testing.T) {
+
+	m := Postgres_t{
+		Key:      "test",
+		Server:   "127.0.0.1",
+		Port:     5432,
+		Username: "root",
+		Pwd:      "1234#@&!Keen",
+		DB:       "city",
+		Timeout:  20,
+	}
+
+	err := m.SaveConnectorFile("t2")
+	fmt.Println("error: ", err)
+	realFilename := "t2" + connector_file_ext
+	_, err = os.Stat(realFilename)
+	if os.IsNotExist(err) {
+		t.Fatal("SaveConnectorFile() = file not exist, want exist")
+	}
+}
+
 func Test_Redist_SaveFile(t *testing.T) {
 
 	m := Redis_t{

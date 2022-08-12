@@ -8,7 +8,7 @@ import (
 )
 
 // 从连连接池获取一个连接. 获得一个有效连接后，可以使用封装的常用命令，也可以直接使用 conn.Do原生函数执行任何命令
-func (r RedisConnectors) Connect() (*redis.Conn, error) {
+func (r RedisConnector) Connect() (*redis.Conn, error) {
 	pool, ok := redislist[string(r)]
 	if !ok {
 		return nil, fmt.Errorf("redis[%s] not existing", string(r))

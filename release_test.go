@@ -46,6 +46,27 @@ func Test_AddFromStructs(t *testing.T) {
 		},
 	}
 
+	ps := []Postgres_t{
+		{
+			Key:      "p1",
+			Server:   "111",
+			Port:     0,
+			Username: "",
+			Pwd:      "",
+			DB:       "",
+			Timeout:  0,
+		},
+		{
+			Key:      "p2",
+			Server:   "222",
+			Port:     0,
+			Username: "",
+			Pwd:      "",
+			DB:       "",
+			Timeout:  0,
+		},
+	}
+
 	rs := []Redis_t{
 		{
 			Key:    "r1",
@@ -55,28 +76,35 @@ func Test_AddFromStructs(t *testing.T) {
 			DB:     0,
 		},
 	}
-	err := AddFromStructs(ms, rs)
+	err := AddFromStructs(ms, rs, ps)
 	if err != nil {
 		t.Fatalf("AddFromStructs() has error: %v", err)
 		return
 	}
-	// expected1 := 2
-	// observed1 := len(mariadbs)
-	// observed2 := len(mariadbs_struct)
-	// if observed1 != expected || observed2 != expected {
-	// 	t.Fatalf("AddFromFiles()  len(mariadbs)= %v,len(mariadbs_struct)= %v, want %v",
-	// 		observed1, observed2, expected)
-	// }
 	fmt.Println(">>>>>>", mariadbs, *(mariadbs_struct["t1"]), *(mariadbs_struct["t2"]), *(redis_struct["r1"]))
 }
 
 func Test_DecryptConnectorFile(t *testing.T) {
-	observed, err := DecryptConnectorFile("/Users/wang/program/go/db-connector/t1" + connector_file_ext)
+	observed, err := DecryptConnectorFile("/Users/wang/program/go/dbconnector/t1" + connector_file_ext)
 	if err != nil {
 		t.Fatalf("DecryptConnectorFile() has error: %v", err)
 		return
 	}
 	expected := `mariadb{"key":"test","server":"127.0.0.1","port":3306,"uid":"root","pwd":"1234#@\u0026!Keen","db":"city","timeout":10}`
+	if observed != expected {
+		t.Fatalf("DecryptConnectorFile() = %v, want %v",
+			observed, expected)
+	}
+	// fmt.Println(">>>>>>", mariadbs, *mariadbs_struct["test"])
+}
+
+func Test_DecryptConnectorFile2(t *testing.T) {
+	observed, err := DecryptConnectorFile("/Users/wang/program/go/dbconnector/t2" + connector_file_ext)
+	if err != nil {
+		t.Fatalf("DecryptConnectorFile() has error: %v", err)
+		return
+	}
+	expected := `postgres{"key":"test","server":"127.0.0.1","port":5432,"user":"root","pwd":"1234#@\u0026!Keen","db":"city","timeout":20}`
 	if observed != expected {
 		t.Fatalf("DecryptConnectorFile() = %v, want %v",
 			observed, expected)

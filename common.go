@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	kind_postgres      = "postgres"
 	kind_mariadb       = "mariadb"
 	kind_redis         = "redis"
 	connector_file_ext = ".contr"
