@@ -111,7 +111,10 @@ func AddFromStructs(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
 		}
 	}
 	for i := 0; i < len(rs); i++ {
-		addRedisByStruct(&(rs[i]))
+		err = addRedisByStruct(&(rs[i]))
+		if err != nil {
+			return
+		}
 	}
 	return
 }
@@ -129,4 +132,37 @@ func DecryptConnectorFile(filename string) (string, error) {
 		return "", fmt.Errorf("文件:%s 密文解析失败. %s", f.Name(), err)
 	}
 	return plainText, nil
+}
+
+// 只增加Mariadb连接
+func AddOnlyMariadb(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
+	for i := 0; i < len(ms); i++ {
+		err = addMariadbByStruct(&(ms[i]))
+		if err != nil {
+			return
+		}
+	}
+	return
+}
+
+// 只增加Postgres连接
+func AddOnlyPostgres(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
+	for i := 0; i < len(ps); i++ {
+		err = addPostgresByStruct(&(ps[i]))
+		if err != nil {
+			return
+		}
+	}
+	return
+}
+
+// 只增加Redis连接
+func AddOnlyRedis(rs []Redis_t) (err error) {
+	for i := 0; i < len(rs); i++ {
+		err = addRedisByStruct(&(rs[i]))
+		if err != nil {
+			return
+		}
+	}
+	return
 }
