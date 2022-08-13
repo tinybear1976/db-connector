@@ -135,7 +135,7 @@ func DecryptConnectorFile(filename string) (string, error) {
 }
 
 // 只增加Mariadb连接
-func AddOnlyMariadb(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
+func AddOnlyMariadb(ms []Mariadb_t) (err error) {
 	for i := 0; i < len(ms); i++ {
 		err = addMariadbByStruct(&(ms[i]))
 		if err != nil {
@@ -146,7 +146,7 @@ func AddOnlyMariadb(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
 }
 
 // 只增加Postgres连接
-func AddOnlyPostgres(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
+func AddOnlyPostgres(ps []Postgres_t) (err error) {
 	for i := 0; i < len(ps); i++ {
 		err = addPostgresByStruct(&(ps[i]))
 		if err != nil {
