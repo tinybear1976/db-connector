@@ -27,15 +27,21 @@ func addRedisByJsonString(jsonstr string) error {
 		Pwd:           "",
 		DB:            0,
 		PoolMaxActive: 0,
+		MaxIdle:       0,
+		IdleTimeout:   0,
+		MaxActive:     0,
 	}
 	err := json.Unmarshal([]byte(jsonstr), p)
 	if err != nil {
 		return fmt.Errorf("Redis连接数据JSON格式分析错误:%s", err.Error())
 	}
+	if p.Key == "" {
+		return fmt.Errorf("Redis连接数据JSON格式分析错误:Key不能为空")
+	}
 	addr := fmt.Sprintf("%s:%d", p.Server, p.Port)
 	redisPool := &redis.Pool{
-		MaxIdle:     2,
-		IdleTimeout: 240 * time.Second,
+		MaxIdle:     p.MaxIdle,                                  //2,
+		IdleTimeout: time.Duration(p.IdleTimeout) * time.Second, //240 * time.Second,
 		MaxActive:   p.PoolMaxActive,
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", addr, redis.DialDatabase(p.DB))

@@ -14,6 +14,9 @@ type Redis_t struct {
 	Pwd           string `toml:"pwd"`
 	DB            int    `toml:"db"`
 	PoolMaxActive int    `toml:"poolMaxActive"` // 0无限制
+	MaxIdle       int
+	IdleTimeout   int
+	MaxActive     int
 }
 
 // 将连接信息按照规范写入流（加密后内容）
