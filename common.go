@@ -13,7 +13,7 @@ const (
 	kind_postgres      = "postgres"
 	kind_mariadb       = "mariadb"
 	kind_redis         = "redis"
-	connector_file_ext = ".contr"
+	connector_file_ext = ".dbc"
 )
 
 // 获得明文,ct 的输入一定是密文

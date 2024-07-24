@@ -96,7 +96,7 @@ func AddFromFiles(currentPath string) error {
 	return nil
 }
 
-// 从连接配置结构体切片中进行添加，一般改函数用于第二步，从配置文件中读取后，进行添加，如果与之前的文件连接器key冲突，这里将覆盖之前的内容
+// 从连接配置结构体切片中进行添加，此函数一般用于第二步，从配置文件中读取后，进行添加，如果与之前的文件连接器key冲突，这里将覆盖之前的内容
 func AddFromStructs(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
 	for i := 0; i < len(ms); i++ {
 		err = addMariadbByStruct(&(ms[i]))
