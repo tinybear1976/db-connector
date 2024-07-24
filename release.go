@@ -96,6 +96,54 @@ func AddFromFiles(currentPath string) error {
 	return nil
 }
 
+// 从指定文件中读取连接器信息，并进行解析，自动添加
+func AddFromDBC(dbcPath, dbcFilename string) error {
+	var fullname string
+	if dbcPath == "" {
+		dir, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("获取当前路径失败. %s", err)
+		}
+		fullname = path.Join(dir, dbcFilename)
+	} else {
+		fullname = path.Join(dbcPath, dbcFilename)
+	}
+
+	f, err := os.Open(fullname)
+	if err != nil {
+		return fmt.Errorf("打开文件 %s 时出现错误: %s", fullname, err.Error())
+	}
+	defer f.Close()
+	plainText, err := getPlaintext(f)
+	if err != nil {
+		return fmt.Errorf("文件:%s 密文解析失败. %s", f.Name(), err)
+	}
+	kind, jsonstr, err := getConnectorKind(plainText)
+	if err != nil {
+		return fmt.Errorf("文件:%s 明文解析失败. %s", f.Name(), err)
+	}
+	switch kind {
+	case kind_mariadb:
+		err = addMariadbByJsonString(jsonstr)
+		if err != nil {
+			err = fmt.Errorf("尝试增加mariadb连接器失败. %s", err)
+		}
+	case kind_postgres:
+		err = addPostgresByJsonString(jsonstr)
+		if err != nil {
+			err = fmt.Errorf("尝试增加postgresql连接器失败. %s", err)
+		}
+	case kind_redis:
+		err = addRedisByJsonString(jsonstr)
+		if err != nil {
+			err = fmt.Errorf("尝试增加redis连接器失败. %s", err)
+		}
+	default:
+		err = fmt.Errorf("未知的数据库类型(%s),无法使用", kind)
+	}
+	return err
+}
+
 // 从连接配置结构体切片中进行添加，此函数一般用于第二步，从配置文件中读取后，进行添加，如果与之前的文件连接器key冲突，这里将覆盖之前的内容
 func AddFromStructs(ms []Mariadb_t, rs []Redis_t, ps []Postgres_t) (err error) {
 	for i := 0; i < len(ms); i++ {
