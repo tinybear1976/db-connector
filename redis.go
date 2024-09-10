@@ -21,15 +21,14 @@ func init() {
 // 通过json字符串原型增加一个Redis连接器
 func addRedisByJsonString(jsonstr string) error {
 	p := &Redis_t{
-		Key:           "",
-		Server:        "",
-		Port:          0,
-		Pwd:           "",
-		DB:            0,
-		PoolMaxActive: 0,
-		MaxIdle:       0,
-		IdleTimeout:   0,
-		MaxActive:     0,
+		Key:         "",
+		Server:      "",
+		Port:        0,
+		Pwd:         "",
+		DB:          0,
+		MaxIdle:     0,
+		IdleTimeout: 0,
+		MaxActive:   0, // 最大连接，0无限
 	}
 	err := json.Unmarshal([]byte(jsonstr), p)
 	if err != nil {
@@ -42,7 +41,7 @@ func addRedisByJsonString(jsonstr string) error {
 	redisPool := &redis.Pool{
 		MaxIdle:     p.MaxIdle,                                  //2,
 		IdleTimeout: time.Duration(p.IdleTimeout) * time.Second, //240 * time.Second,
-		MaxActive:   p.PoolMaxActive,
+		MaxActive:   p.MaxActive,
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", addr, redis.DialDatabase(p.DB))
 			if err != nil {
@@ -73,9 +72,9 @@ func addRedisByJsonString(jsonstr string) error {
 func addRedisByStruct(r *Redis_t) error {
 	addr := fmt.Sprintf("%s:%d", r.Server, r.Port)
 	redisPool := &redis.Pool{
-		MaxIdle:     2,
-		IdleTimeout: 240 * time.Second,
-		MaxActive:   1000,
+		MaxIdle:     r.MaxIdle,
+		IdleTimeout: time.Duration(r.IdleTimeout) * time.Second, //240 * time.Second
+		MaxActive:   r.MaxActive,
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", addr, redis.DialDatabase(r.DB))
 			if err != nil {

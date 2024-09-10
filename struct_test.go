@@ -53,12 +53,12 @@ func Test_Postgrest_SaveFile(t *testing.T) {
 func Test_Redist_SaveFile(t *testing.T) {
 
 	m := Redis_t{
-		Key:           "local",
-		Server:        "127.0.0.1",
-		Port:          6379,
-		Pwd:           "",
-		DB:            0,
-		PoolMaxActive: 0,
+		Key:       "local",
+		Server:    "127.0.0.1",
+		Port:      6379,
+		Pwd:       "",
+		DB:        0,
+		MaxActive: 0,
 	}
 	main_name := "redis_local"
 	err := m.SaveConnectorFile(main_name)
