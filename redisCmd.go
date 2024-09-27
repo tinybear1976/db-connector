@@ -17,6 +17,16 @@ func (r RedisConnector) Connect() (*redis.Conn, error) {
 	return &redisClient, nil
 }
 
+// 关闭连接池
+func (r RedisConnector) Close() {
+	pool, ok := redislist[string(r)]
+	if !ok {
+		return
+	}
+	pool.Close()
+	delete(redislist, string(r))
+}
+
 // 断开连接
 func Diconnect(conn *redis.Conn) (err error) {
 	if conn == nil {
